@@ -1,0 +1,77 @@
+---
+name: CI
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+    inputs:
+      lorem-ipsum:
+        type: choice
+        description: Lorem ipsum
+        required: true
+        options:
+          - foo
+          - bar
+        default: foo
+
+# Allow one concurrent
+concurrency:
+  group: ${{ format('{0}-{1}', github.event_name, github.ref) }}
+  cancel-in-progress: true
+
+env:
+  FOO: BAR
+
+jobs:
+  dog-food-matrix:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Dump Context Action
+        uses: ./
+        with:
+          vars-context: ${{ toJson(vars) }}
+          secrets-context: ${{ toJson(secrets) }}
+          needs-context: ${{ toJson(needs) }}
+          inputs-context: ${{ toJson(inputs) }}
+
+  dog-food:
+    needs:
+      - dog-food-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Dump Context Action (inputs)
+        uses: ./
+        with:
+          vars-context: ${{ toJson(vars) }}
+          secrets-context: ${{ toJson(secrets) }}
+          needs-context: ${{ toJson(needs) }}
+          inputs-context: ${{ toJson(inputs) }}
+
+      - name: Dump Context Action (no inputs)
+        uses: ./
+
+  dog-food-main:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump Context
+        uses: DariuszPorowski/dump-context-action@main
+        with:
+          vars-context: ${{ toJson(vars) }}
+          secrets-context: ${{ toJson(secrets) }}
+          needs-context: ${{ toJson(needs) }}
+          inputs-context: ${{ toJson(inputs) }}
