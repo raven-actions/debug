@@ -64,8 +64,11 @@ jobs:
       - name: Dump Context Action (no inputs)
         uses: ./
 
-      - name: Dump Context Action
-        if: ${{ github.ref == 'refs/heads/main' }}
+  dog-food-main:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump Context
         uses: DariuszPorowski/dump-context-action@main
         with:
           vars-context: ${{ toJson(vars) }}
