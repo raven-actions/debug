@@ -1,8 +1,8 @@
-# Contributing Guide
+# 👥 Contributing Guide
 
 I appreciate your interest in contributing to the project! This document outlines how to contribute to the project, including the contribution process, code style, and testing.
 
-## Contribution process
+## 🔄️ Contribution process
 
 To contribute, please follow these steps:
 
@@ -14,11 +14,11 @@ To contribute, please follow these steps:
 1. Create a new pull request from your fork to this project.
 1. Please ensure that your pull request includes a detailed description of your changes and that your code adheres to the code style guidelines outlined below.
 
-## Code of Conduct
+## 🔰 Code of Conduct
 
-All contributors are expected to adhere to the project name code of conduct. Therefore, please review it before contributing [Code of Conduct](./CODE_OF_CONDUCT.md).
+All contributors are expected to adhere to the project name code of conduct. Therefore, please review it before contributing [`Code of Conduct`](./CODE_OF_CONDUCT.md).
 
-## License
+## 📄 License
 
 By contributing to this project, you agree that your contributions will be licensed under the project license.
 
