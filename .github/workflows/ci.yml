@@ -22,6 +22,7 @@ concurrency:
 
 env:
   FOO: BAR
+  DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG || vars.ACTIONS_RUNNER_DEBUG || secrets.ACTIONS_STEP_DEBUG || vars.ACTIONS_STEP_DEBUG }}
 
 jobs:
   dog-food-matrix:
@@ -63,6 +64,15 @@ jobs:
 
       - name: Dump Context Action (no inputs)
         uses: ./
+
+      - name: Dump Context Action (only debug)
+        if: ${{ env.DEBUG }}
+        uses: ./
+        with:
+          vars-context: ${{ toJson(vars) }}
+          secrets-context: ${{ toJson(secrets) }}
+          needs-context: ${{ toJson(needs) }}
+          inputs-context: ${{ toJson(inputs) }}
 
   dog-food-main:
     if: ${{ github.ref == 'refs/heads/main' }}
