@@ -25,6 +25,14 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
+      - name: Dump Context
+        uses: DariuszPorowski/dump-context-action@main
+        with:
+          vars-context: ${{ toJson(vars) }}
+          secrets-context: ${{ toJson(secrets) }}
+          needs-context: ${{ toJson(needs) }}
+          inputs-context: ${{ toJson(inputs) }}
+
       - name: Update release to the latest
         id: gh-release
         uses: softprops/action-gh-release@v1

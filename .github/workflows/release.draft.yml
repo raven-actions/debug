@@ -20,6 +20,14 @@ jobs:
       pull-requests: read
     runs-on: ubuntu-latest
     steps:
+      - name: Dump Context
+        uses: DariuszPorowski/dump-context-action@main
+        with:
+          vars-context: ${{ toJson(vars) }}
+          secrets-context: ${{ toJson(secrets) }}
+          needs-context: ${{ toJson(needs) }}
+          inputs-context: ${{ toJson(inputs) }}
+
       - name: Run Release Drafter
         uses: release-drafter/release-drafter@v5
         id: release-drafter
