@@ -16,6 +16,7 @@ This action allows you to quickly and easily dump [GitHub contexts](https://docs
 
 - [🤔 Usage](#-usage)
   - [Quick Start](#quick-start)
+  - [Extra context](#extra-context)
   - [Run only when `GitHub debug logging` enabled](#run-only-when-github-debug-logging-enabled)
 - [📥 Inputs](#-inputs)
 - [👥 Contributing](#-contributing)
@@ -24,6 +25,17 @@ This action allows you to quickly and easily dump [GitHub contexts](https://docs
 ## 🤔 Usage
 
 ### Quick Start
+
+Just place in your GitHub workflow steps:
+
+```yaml
+- name: Dump Context
+  uses: DariuszPorowski/dump-context-action@v1
+```
+
+### Extra context
+
+By default, [composite](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action) action cannot access contexts like `vars`, `secrets` `needs`, `inputs`. So if you want to include them in the dump, you must specify them explicitly. For more details, follow [📥 Inputs](#-inputs) section.
 
 ```yaml
 - name: Dump Context
@@ -59,12 +71,12 @@ and add `if: ${{ env.DEBUG }}` condition to the action.
 
 ## 📥 Inputs
 
-| Name            | Required | Type        | Default value | Description                                                                                               |
-|-----------------|----------|-------------|---------------|-----------------------------------------------------------------------------------------------------------|
-| vars-context    | false    | json object | *not set*     | The context for the `vars` must be explicitly provided, as it is unavailable in the composite actions.    |
-| secrets-context | false    | json object | *not set*     | The context for the `secrets` must be explicitly provided, as it is unavailable in the composite actions. |
-| needs-context   | false    | json object | *not set*     | The context for the `needs` must be explicitly provided, as it is unavailable in the composite actions.   |
-| inputs-context  | false    | json object | *not set*     | The context for the `inputs` must be explicitly provided, as it is unavailable in the composite actions.  |
+| Name            | Required | Type          | Default value | Description                                                                                               |
+|-----------------|----------|---------------|---------------|-----------------------------------------------------------------------------------------------------------|
+| vars-context    | false    | `json object` | *not set*     | The context for the `vars` must be explicitly provided, as it is unavailable in the composite actions.    |
+| secrets-context | false    | `json object` | *not set*     | The context for the `secrets` must be explicitly provided, as it is unavailable in the composite actions. |
+| needs-context   | false    | `json object` | *not set*     | The context for the `needs` must be explicitly provided, as it is unavailable in the composite actions.   |
+| inputs-context  | false    | `json object` | *not set*     | The context for the `inputs` must be explicitly provided, as it is unavailable in the composite actions.  |
 
 ## 👥 Contributing
 
