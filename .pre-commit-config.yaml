@@ -20,3 +20,6 @@ repos:
     rev: v1.6.24
     hooks:
       - id: actionlint
+        args:
+          - "-ignore"
+          - "SC2086"
