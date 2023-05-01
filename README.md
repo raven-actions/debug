@@ -41,7 +41,7 @@ In certain circumstances (e.g., re-run failing workflow), if you'd like to run `
 
 ```yaml
 env:
-  DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG || vars.ACTIONS_RUNNER_DEBUG || secrets.ACTIONS_STEP_DEBUG || vars.ACTIONS_STEP_DEBUG }}
+  DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG || vars.ACTIONS_RUNNER_DEBUG || secrets.ACTIONS_STEP_DEBUG || vars.ACTIONS_STEP_DEBUG || false }}
 ```
 
 and add `if: ${{ env.DEBUG }}` condition to the action.

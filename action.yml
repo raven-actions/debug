@@ -1,6 +1,7 @@
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
 name: Dump Context Action
 description: Dump GitHub contexts and Runner environment
+author: Dariusz Porowski
 branding:
   icon: activity # https://feathericons.com
   color: blue
