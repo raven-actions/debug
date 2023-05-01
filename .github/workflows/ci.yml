@@ -35,6 +35,8 @@ jobs:
 
       - name: actionlint
         uses: DariuszPorowski/actionlint-action@v1
+        with:
+          flags: "-ignore SC2086"
 
       - name: Run pre-commit
         run: |
