@@ -2,6 +2,7 @@
 name-template: v$RESOLVED_VERSION
 tag-template: v$RESOLVED_VERSION
 footer: |
+
   See details of all code changes: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION since previous release.
 template: |
   ## 🔄️ What's Changed
@@ -71,6 +72,7 @@ version-resolver:
       - doc
       - docs
       - documentation
+      - deps
       - dependencies
       - security
   default: patch
