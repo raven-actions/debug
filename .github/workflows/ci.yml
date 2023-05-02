@@ -1,0 +1,95 @@
+---
+name: CI
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+    inputs:
+      lorem-ipsum:
+        type: choice
+        description: Lorem ipsum
+        required: true
+        options:
+          - foo
+          - bar
+        default: foo
+
+# Allow one concurrent
+concurrency:
+  group: ${{ format('{0}-{1}', github.event_name, github.ref) }}
+  cancel-in-progress: true
+
+env:
+  FOO: BAR
+  DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG || vars.ACTIONS_RUNNER_DEBUG || secrets.ACTIONS_STEP_DEBUG || vars.ACTIONS_STEP_DEBUG || false }}
+
+jobs:
+  lint:
+    name: Lint
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: actionlint
+        uses: DariuszPorowski/actionlint-action@v1
+        with:
+          flags: "-ignore SC2086"
+
+      - name: Run pre-commit
+        run: |
+          pip install pre-commit
+          pre-commit run --all-files --verbose
+
+  dog-food-matrix:
+    name: Dog food (test runners)
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Dump Contexts Action
+        uses: ./
+        with:
+          vars-context: ${{ toJson(vars) }}
+          secrets-context: ${{ toJson(secrets) }}
+          needs-context: ${{ toJson(needs) }}
+          inputs-context: ${{ toJson(inputs) }}
+
+  dog-food:
+    name: Dog food (test inputs)
+    needs:
+      - dog-food-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Dump Contexts Action (inputs)
+        uses: ./
+        with:
+          vars-context: ${{ toJson(vars) }}
+          secrets-context: ${{ toJson(secrets) }}
+          needs-context: ${{ toJson(needs) }}
+          inputs-context: ${{ toJson(inputs) }}
+
+      - name: Dump Contexts Action (no inputs)
+        uses: ./
+
+      - name: Dump Contexts Action (only debug)
+        if: ${{ env.DEBUG }}
+        uses: ./
+        with:
+          vars-context: ${{ toJson(vars) }}
+          secrets-context: ${{ toJson(secrets) }}
+          needs-context: ${{ toJson(needs) }}
+          inputs-context: ${{ toJson(inputs) }}

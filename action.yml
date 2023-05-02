@@ -1,0 +1,240 @@
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
+name: Dump Contexts
+description: Dump GitHub contexts and Runner environment
+author: Dariusz Porowski
+branding:
+  icon: info # https://feathericons.com
+  color: blue
+
+inputs:
+  vars-context:
+    description: vars context
+    required: false
+    default: ${{ null }}
+  secrets-context:
+    description: secrets context
+    required: false
+    default: ${{ null }}
+  needs-context:
+    description: needs context
+    required: false
+    default: ${{ null }}
+  inputs-context:
+    description: inputs context
+    required: false
+    default: ${{ null }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/github-script@v6
+      if: ${{ always() }}
+      with:
+        script: |
+          // dependencies
+          const fs = require('fs')
+
+          // constraints
+          const color = '\x1b[34m' // blue
+          const reset = '\x1b[0m'
+          const emoji = '⬇️'
+          const expand = 'expand for details'
+          const platform = process.platform
+
+          // helpers
+          function groupHeader (group) {
+            return `${color}${emoji} ${group}${reset} ${expand}`
+          }
+
+          function jsonLogOutput (jsonObj, parse = true) {
+            const jsonObjParsed = parse ? JSON.parse(jsonObj) : jsonObj
+            return JSON.stringify(jsonObjParsed, null, 2)
+          }
+
+          // os env vars
+          await core.group(groupHeader('OS (environment variables)'), async () => {
+            const envVars = {}
+            Object.keys(process.env)
+              .filter(key => !key.startsWith('INPUT_') && !key.startsWith('ACTION_DUMP_'))
+              .sort()
+              .forEach(key => {
+                envVars[key] = process.env[key]
+              })
+            core.info(jsonLogOutput(envVars, false))
+          })
+
+          // github context
+          await core.group(groupHeader('GitHub (github context)'), async () => {
+            core.info(jsonLogOutput(process.env.ACTION_DUMP_CONTEXT_GITHUB))
+          })
+
+          // env context
+          await core.group(groupHeader('GitHub (env context)'), async () => {
+            core.info(jsonLogOutput(process.env.ACTION_DUMP_CONTEXT_ENV))
+          })
+
+          // vars context
+          const varsContext = process.env.ACTION_DUMP_CONTEXT_VARS
+          if (varsContext !== '') {
+            await core.group(groupHeader('GitHub (vars context)'), async () => {
+              core.info(jsonLogOutput(varsContext))
+            })
+          }
+
+          // job context
+          await core.group(groupHeader('GitHub (job context)'), async () => {
+            core.info(jsonLogOutput(process.env.ACTION_DUMP_CONTEXT_JOB))
+          })
+
+          // steps context
+          await core.group(groupHeader('GitHub (steps context)'), async () => {
+            core.info(jsonLogOutput(process.env.ACTION_DUMP_CONTEXT_STEPS))
+          })
+
+          // runner context
+          await core.group(groupHeader('GitHub (runner context)'), async () => {
+            core.info(jsonLogOutput(process.env.ACTION_DUMP_CONTEXT_RUNNER))
+          })
+
+          // secrets context
+          const secretsContext = process.env.ACTION_DUMP_CONTEXT_SECRETS
+          if (secretsContext !== '') {
+            await core.group(groupHeader('GitHub (secrets context)'), async () => {
+              core.info(jsonLogOutput(secretsContext))
+            })
+          }
+
+          // strategy context
+          await core.group(groupHeader('GitHub (strategy context)'), async () => {
+            core.info(jsonLogOutput(process.env.ACTION_DUMP_CONTEXT_STRATEGY))
+          })
+
+          // matrix context
+          await core.group(groupHeader('GitHub (matrix context)'), async () => {
+            core.info(jsonLogOutput(process.env.ACTION_DUMP_CONTEXT_MATRIX))
+          })
+
+          // needs context
+          const needsContext = process.env.ACTION_DUMP_CONTEXT_NEEDS
+          if (needsContext !== '') {
+            await core.group(groupHeader('GitHub (needs context)'), async () => {
+              core.info(jsonLogOutput(needsContext))
+            })
+          }
+
+          // inputs context
+          const inputsContext = process.env.ACTION_DUMP_CONTEXT_INPUTS
+          if (inputsContext !== '') {
+            await core.group(groupHeader('GitHub (inputs context)'), async () => {
+              core.info(jsonLogOutput(inputsContext))
+            })
+          }
+
+          // event file
+          await core.group(groupHeader('GitHub (event file)'), async () => {
+            core.info(`path: ${process.env.GITHUB_EVENT_PATH}`)
+            core.info(jsonLogOutput(fs.readFileSync(process.env.GITHUB_EVENT_PATH, { encoding: 'utf-8' }).trim()))
+          })
+
+          // docker
+          let dockerBinary = 'docker'
+          if (platform === 'win32') {
+            dockerBinary = 'docker.exe'
+          }
+
+          let dockerExists = false
+          try {
+            await io.which(dockerBinary, true)
+            dockerExists = true
+          } catch (err) {
+            dockerExists = false
+          }
+
+          if (dockerExists) {
+            // docker version
+            await core.group(groupHeader('Docker (version)'), async () => {
+              const { stdout } = await exec.getExecOutput('docker', ['version', '--format', '{{json . }}'], { silent: true, ignoreReturnCode: true })
+              core.info(jsonLogOutput(stdout.trim()))
+            })
+
+            // docker info
+            await core.group(groupHeader('Docker (info)'), async () => {
+              const { stdout } = await exec.getExecOutput('docker', ['info', '--format', '{{json . }}'], { silent: true, ignoreReturnCode: true })
+              core.info(jsonLogOutput(stdout.trim()))
+            })
+
+            // TODO json output - pretty print
+            // docker images
+            await core.group(groupHeader('Docker (images)'), async () => {
+              const { stdout } = await exec.getExecOutput('docker', ['image', 'ls', '--format', '{{json . }}'], { silent: true, ignoreReturnCode: true })
+              core.info(stdout.trim())
+            })
+
+            // docker daemon config
+            let dockerDaemonConfigPath = '/etc/docker/daemon.json'
+            if (platform === 'win32') {
+              dockerDaemonConfigPath = `${process.env.ProgramData}\\docker\\config\\daemon.json`
+            }
+
+            if(fs.existsSync(dockerDaemonConfigPath)){
+              await core.group(groupHeader('Docker (daemon config)'), async () => {
+                core.info(`path: ${dockerDaemonConfigPath}`)
+                core.info(jsonLogOutput(fs.readFileSync(core.toPlatformPath(dockerDaemonConfigPath), { encoding: 'utf-8' }).trim()))
+              })
+            }
+          }
+
+          if (platform === 'linux' || platform === 'darwin') {
+            await core.group(groupHeader('OS (file system)'), async () => {
+              await exec.exec('sh -e -c "df -aPh | jq -R -s \'[split(\\"\\n\\") | .[] | gsub(\\" +\\"; \\" \\") | split(\\" \\") | {filesystem: .[0], size: .[1], used: .[2], avail: .[3], use: .[4], mounted_on: .[5]}]\'"')
+            })
+
+            await core.group(groupHeader('OS (mounts)'), async () => {
+              await exec.exec('mount')
+            })
+          }
+
+          // TODO json output
+          // processor linux
+          if (platform === 'linux') {
+            await core.group(groupHeader('OS (processor)'), async () => {
+              await exec.exec('lscpu')
+            })
+          }
+
+          // TODO json output
+          // processor macos
+          if (platform === 'darwin') {
+            await core.group(groupHeader('OS (processor)'), async () => {
+              await exec.exec('sh -e -c "sysctl -a | grep machdep.cpu"')
+            })
+          }
+
+          if (platform === 'win32') {
+            // processor windows
+            await core.group(groupHeader('OS (processor)'), async () => {
+              await exec.exec('pwsh.exe', ['-Command', 'Get-CimInstance -Class Win32_Processor | Select-Object * -ExcludeProperty Cim* | ConvertTo-Json'])
+            })
+
+            await core.group(groupHeader('OS (computer system)'), async () => {
+              await exec.exec('pwsh.exe', ['-Command', 'Get-CimInstance -Class Win32_ComputerSystem | Select-Object * -ExcludeProperty Cim* | ConvertTo-Json'])
+            })
+
+            await core.group(groupHeader('OS (operating system)'), async () => {
+              await exec.exec('pwsh.exe', ['-Command', 'Get-CimInstance -Class Win32_OperatingSystem | Select-Object * -ExcludeProperty Cim* | ConvertTo-Json'])
+            })
+          }
+      env:
+        # https://docs.github.com/en/actions/learn-github-actions/contexts
+        ACTION_DUMP_CONTEXT_GITHUB: ${{ toJson(github) }}
+        ACTION_DUMP_CONTEXT_ENV: ${{ toJson(env) }}
+        ACTION_DUMP_CONTEXT_VARS: ${{ inputs.vars-context }}
+        ACTION_DUMP_CONTEXT_JOB: ${{ toJson(job) }}
+        # ACTION_DUMP_CONTEXT_JOBS: ${{ inputs.jobs-context }}
+        ACTION_DUMP_CONTEXT_STEPS: ${{ toJson(steps) }}
+        ACTION_DUMP_CONTEXT_RUNNER: ${{ toJson(runner) }}
+        ACTION_DUMP_CONTEXT_SECRETS: ${{ inputs.secrets-context }}
+        ACTION_DUMP_CONTEXT_STRATEGY: ${{ toJson(strategy) }}
+        ACTION_DUMP_CONTEXT_MATRIX: ${{ toJson(matrix) }}
+        ACTION_DUMP_CONTEXT_NEEDS: ${{ inputs.needs-context }}
+        ACTION_DUMP_CONTEXT_INPUTS: ${{ inputs.inputs-context }}
