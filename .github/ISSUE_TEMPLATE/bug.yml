@@ -36,10 +36,10 @@ body:
     validations:
       required: false
   - type: input
-    id: dump-contexts-action
+    id: action
     attributes:
-      label: 🌌 Environment (Dump Contexts Action)
-      description: What Dump Contexts Action version are you running?
+      label: 🌌 Environment (Debug Action)
+      description: What Debug Action version are you running?
       placeholder: 1.0.0
     validations:
       required: true
@@ -82,7 +82,7 @@ body:
     id: terms
     attributes:
       label: 📜 Code of Conduct
-      description: By submitting this issue, you agree to follow our [`Code of Conduct`](https://github.com/raven-actions/dump-contexts/blob/main/.github/CODE_OF_CONDUCT.md)
+      description: By submitting this issue, you agree to follow our [`Code of Conduct`](https://github.com/raven-actions/debug/blob/main/.github/CODE_OF_CONDUCT.md)
       options:
         - label: I agree to follow this project's Code of Conduct.
           required: true
