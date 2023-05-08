@@ -9,25 +9,15 @@ on:
   # pull_request:
   #   # Only following types are handled by the action, but one can default to all as well
 
-permissions: {}
-
 jobs:
   draft-release:
-    if: ${{ github.repository_owner == 'DariuszPorowski' }}
+    if: ${{ github.repository_owner == 'raven-actions' }}
     name: Draft Release
     permissions:
       contents: write
       pull-requests: read
     runs-on: ubuntu-latest
     steps:
-      - name: Dump Contexts
-        uses: DariuszPorowski/ghaction-dump-contexts@main
-        with:
-          vars-context: ${{ toJson(vars) }}
-          secrets-context: ${{ toJson(secrets) }}
-          needs-context: ${{ toJson(needs) }}
-          inputs-context: ${{ toJson(inputs) }}
-
       - name: Run Release Drafter
         uses: release-drafter/release-drafter@v5
         id: release-drafter

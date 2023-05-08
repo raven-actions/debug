@@ -1,5 +1,5 @@
 ---
-name: Release
+name: Publish Release
 
 on:
   # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release
@@ -18,21 +18,10 @@ env:
 jobs:
   gh-release-update:
     name: GitHub Release
-    environment:
-      name: Release
-      url: ${{ steps.gh-release.outputs.url }}
     permissions:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Dump Contexts
-        uses: DariuszPorowski/ghaction-dump-contexts@main
-        with:
-          vars-context: ${{ toJson(vars) }}
-          secrets-context: ${{ toJson(secrets) }}
-          needs-context: ${{ toJson(needs) }}
-          inputs-context: ${{ toJson(inputs) }}
-
       - name: Update release to the latest
         id: gh-release
         uses: softprops/action-gh-release@v1
