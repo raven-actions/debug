@@ -69,19 +69,6 @@ jobs:
         with:
           config-file: .github/linters/.markdown-link-check.json
 
-      # - name: TruffleHog
-      #   uses: trufflesecurity/trufflehog@main
-      #   with:
-      #     path: ./
-      #     base: ${{ github.event.repository.default_branch }}
-      #     head: HEAD
-      #     extra_args: --debug --only-verified
-
-      # - name: Run pre-commit
-      #   run: |
-      #     pip install pre-commit
-      #     pre-commit run --all-files --verbose
-
   dog-food:
     name: Dog food (test inputs)
     runs-on: ubuntu-latest
@@ -89,8 +76,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Dump Contexts Action (inputs)
-        id: dump-contexts
+      - name: Debug Action (inputs)
+        id: debug
         uses: ./
         with:
           vars-context: ${{ toJson(vars) }}
@@ -99,15 +86,15 @@ jobs:
           inputs-context: ${{ toJson(inputs) }}
           smee: true
 
-      - name: Dump Contexts outputs
-        if: ${{ steps.dump-contexts.outputs.smee == 'true' }}
+      - name: Debug outputs
+        if: ${{ steps.debug.outputs.smee == 'true' }}
         run: |
-          echo "Your SMEE.io URL is: ${{ steps.dump-contexts.outputs.smee-url }}"
+          echo "Your SMEE.io URL is: ${{ steps.debug.outputs.smee-url }}"
 
-      - name: Dump Contexts Action (no inputs)
+      - name: Debug Action (no inputs)
         uses: ./
 
-      - name: Dump Contexts Action (only debug)
+      - name: Debug Action (only debug)
         if: ${{ env.DEBUG == 'true' }}
         uses: ./
         with:
@@ -132,7 +119,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Dump Contexts Action
+      - name: Debug Action
         uses: ./
         with:
           vars-context: ${{ toJson(vars) }}

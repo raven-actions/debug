@@ -1,7 +1,7 @@
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
 ---
-name: Dump Contexts
-description: Dump GitHub contexts and Runner environment
+name: Debug
+description: Dump GitHub contexts and Runner environment, post action webhook payload to the SMEE.io
 author: Dariusz Porowski
 branding:
   icon: info # https://feathericons.com
@@ -301,7 +301,7 @@ runs:
 
           const payload = {
             ...context.payload,
-            'dump-contexts': {
+            'debug-action': {
               eventName: context.eventName,
               sha: context.sha,
               ref: context.ref,

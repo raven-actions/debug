@@ -1,16 +1,16 @@
-# 🩺 Dump Contexts Action
+# 🩺 Debug Action
 
-[![GitHub - marketplace](https://img.shields.io/badge/marketplace-dump--contexts-blue?logo=github&style=flat-square)](https://github.com/marketplace/actions/dump-contexts)
-[![GitHub - release](https://img.shields.io/github/v/release/raven-actions/dump-contexts?style=flat-square)](https://github.com/raven-actions/dump-contexts/releases/latest)
-[![GitHub - ci](https://img.shields.io/github/actions/workflow/status/raven-actions/dump-contexts/ci.yml?logo=github&label=CI&style=flat-square&branch=main&event=push)](https://github.com/raven-actions/dump-contexts/actions/workflows/ci.yml?query=branch%3Amain+event%3Apush)
-[![GitHub - license](https://img.shields.io/github/license/raven-actions/dump-contexts?style=flat-square)](https://github.com/raven-actions/dump-contexts/blob/main/LICENSE)
+[![GitHub - marketplace](https://img.shields.io/badge/marketplace-debug-blue?logo=github&style=flat-square)](https://github.com/marketplace/actions/debug)
+[![GitHub - release](https://img.shields.io/github/v/release/raven-actions/debug?style=flat-square)](https://github.com/raven-actions/debug/releases/latest)
+[![GitHub - ci](https://img.shields.io/github/actions/workflow/status/raven-actions/debug/ci.yml?logo=github&label=CI&style=flat-square&branch=main&event=push)](https://github.com/raven-actions/debug/actions/workflows/ci.yml?query=branch%3Amain+event%3Apush)
+[![GitHub - license](https://img.shields.io/github/license/raven-actions/debug?style=flat-square)](https://github.com/raven-actions/debug/blob/main/LICENSE)
 
-This [GitHub Action](https://github.com/features/actions) allows you to quickly and easily dump [GitHub contexts](https://docs.github.com/en/actions/learn-github-actions/contexts) and Runner environment and post action webhook payloads to the [SMEE.io](https://smee.io) service, giving you a comprehensive overview of the current state of your GitHub workflow. This can be useful for developing GitHub workflows, troubleshooting, debugging, or understanding how different components interact.
+This [GitHub Action](https://github.com/features/actions) allows you to quickly and easily dump [GitHub contexts](https://docs.github.com/en/actions/learn-github-actions/contexts) and Runner environment and post action webhook payloads to the [SMEE.io](https://smee.io) service, giving you a comprehensive overview of the current state of your GitHub workflow. This can be useful for developing, troubleshooting, debugging GitHub workflows or actions, or understanding how different components interact.
 
 - Action is platform-independent and tested on all the latest GitHub-hosted runners (`ubuntu-latest`, `macos-latest`, `windows-latest`).
 - The output of each dump is in the `JSON` format as much as possible.
 
-![demo](https://raw.githubusercontent.com/raven-actions/dump-contexts/main/assets/images/demo.png)
+![demo](https://raw.githubusercontent.com/raven-actions/debug/main/assets/images/demo.png)
 
 ## Table of Contents <!-- omit in toc -->
 
@@ -31,8 +31,8 @@ This [GitHub Action](https://github.com/features/actions) allows you to quickly 
 Just place in your GitHub workflow steps:
 
 ```yaml
-- name: Dump Contexts
-  uses: raven-actions/dump-contexts@v1
+- name: Debug
+  uses: raven-actions/debug@v1
 ```
 
 ### Extra contexts
@@ -42,8 +42,8 @@ By default, [composite](https://docs.github.com/en/actions/creating-actions/crea
 > ⚠️ `secrets` contexts will not show your secrets in the log! It's masked `***` by default.
 
 ```yaml
-- name: Dump Contexts
-  uses: raven-actions/dump-contexts@v1
+- name: Debug
+  uses: raven-actions/debug@v1
   with:
     vars-context: ${{ toJson(vars) }}  # optional
     secrets-context: ${{ toJson(secrets) }}  # optional
@@ -53,7 +53,7 @@ By default, [composite](https://docs.github.com/en/actions/creating-actions/crea
 
 ### Run only when `GitHub debug logging` enabled
 
-In certain circumstances (e.g., re-run failing workflow), if you'd like to run `Dump Contexts Action` only when [GitHub debug logging](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/enabling-debug-logging) is enabled, then set `env` on workflow or job level:
+In certain circumstances (e.g., re-run failing workflow), if you'd like to run `Debug Action` only when [GitHub debug logging](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/enabling-debug-logging) is enabled, then set `env` on workflow or job level:
 
 ```yaml
 env:
@@ -63,9 +63,9 @@ env:
 and add `if: ${{ env.DEBUG == 'true' }}` condition to the action.
 
 ```yaml
-- name: Dump Contexts
+- name: Debug
   if: ${{ env.DEBUG == 'true' }}
-  uses: raven-actions/dump-contexts@v1
+  uses: raven-actions/debug@v1
   with:
     vars-context: ${{ toJson(vars) }}  # optional
     secrets-context: ${{ toJson(secrets) }}  # optional
@@ -82,17 +82,17 @@ Aid in debugging GitHub Action runs by expertly posting webhook payloads to [SME
 To access the channel, please make sure you have a browser tab open to the channel URL.
 
 ```yaml
-- name: Dump Contexts
-  id: dump-contexts
-  uses: raven-actions/dump-contexts@v1
+- name: Debug
+  id: debug
+  uses: raven-actions/debug@v1
   with:
     smee: true  # optional, if not set then default is `false`
-    smee-channel: my-custom-channel-name # optional, if not set then default is `repositoryOwner-repositoryName`, e.g. raven-actions-dump-contexts
+    smee-channel: my-custom-channel-name # optional, if not set then default is `repositoryOwner-repositoryName`, e.g. raven-actions-debug
 
-- name: Dump Contexts outputs
-  if: ${{ steps.dump-contexts.outputs.smee == 'true' }}  # example usage
+- name: Debug outputs
+  if: ${{ steps.debug.outputs.smee == 'true' }}  # example usage
   run: |
-    echo "Your SMEE.io URL is: ${{ steps.dump-contexts.outputs.smee-url }}"
+    echo "Your SMEE.io URL is: ${{ steps.debug.outputs.smee-url }}"
 ```
 
 ## 📥 Inputs
@@ -114,8 +114,8 @@ To access the channel, please make sure you have a browser tab open to the chann
 
 ## 👥 Contributing
 
-Contributions to the project are welcome! Please follow [Contributing Guide](https://github.com/raven-actions/dump-contexts/blob/main/.github/CONTRIBUTING.md).
+Contributions to the project are welcome! Please follow [Contributing Guide](https://github.com/raven-actions/debug/blob/main/.github/CONTRIBUTING.md).
 
 ## 📄 License
 
-This project is distributed under the terms of the [MIT](https://github.com/raven-actions/dump-contexts/blob/main/LICENSE) license.
+This project is distributed under the terms of the [MIT](https://github.com/raven-actions/debug/blob/main/LICENSE) license.
