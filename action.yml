@@ -36,7 +36,7 @@ inputs:
 outputs:
   smee:
     description: SMEE used? If SMEE is not used, it will be false.
-    value: ${{ steps.smee.outputs.url }}
+    value: ${{ steps.smee.outputs.smee }}
   smee-url:
     description: The SMEE URL to use. If SMEE is not used, it will be empty.
     value: ${{ steps.smee.outputs.url }}
