@@ -1,5 +1,5 @@
----
 # https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema
+---
 name: ❓ Question
 description: Ask a question about this project 🎓
 title: "❓ [question]: "
@@ -14,7 +14,7 @@ body:
       label: ✅ Checklist
       description: Mark with an ✔️ all the checkboxes that apply.
       options:
-        - label: I've searched the project's [`issues`](https://github.com/DariuszPorowski/ghaction-dump-contexts/issues?q=is%3Aissue) and did not find answer for my question.
+        - label: I've searched the project's [`issues`](https://github.com/raven-actions/dump-contexts/issues?q=is%3Aissue) and did not find answer for my question.
           required: true
   - type: textarea
     id: question
@@ -38,7 +38,7 @@ body:
     id: terms
     attributes:
       label: 📜 Code of Conduct
-      description: By submitting this issue, you agree to follow our [`Code of Conduct`](https://github.com/DariuszPorowski/ghaction-dump-contexts/blob/main/.github/CODE_OF_CONDUCT.md)
+      description: By submitting this issue, you agree to follow our [`Code of Conduct`](https://github.com/raven-actions/dump-contexts/blob/main/.github/CODE_OF_CONDUCT.md)
       options:
         - label: I agree to follow this project's Code of Conduct.
           required: true

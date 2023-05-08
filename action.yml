@@ -1,10 +1,11 @@
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
+---
 name: Dump Contexts
 description: Dump GitHub contexts and Runner environment
 author: Dariusz Porowski
 branding:
   icon: info # https://feathericons.com
-  color: blue
+  color: gray-dark
 
 inputs:
   vars-context:
@@ -23,6 +24,22 @@ inputs:
     description: inputs context
     required: false
     default: ${{ null }}
+  smee:
+    description: Use SMEE to proxy payloads to SMEE.io. By default, it will not use SMEE.
+    required: false
+    default: ${{ false }}
+  smee-channel:
+    description: The SMEE channel ID to use. If not provided, ID of the repository will be used.
+    required: false
+    default: ${{ null }}
+
+outputs:
+  smee:
+    description: SMEE used? If SMEE is not used, it will be false.
+    value: ${{ steps.smee.outputs.smee }}
+  smee-url:
+    description: The SMEE URL to use. If SMEE is not used, it will be empty.
+    value: ${{ steps.smee.outputs.url }}
 
 runs:
   using: composite
@@ -238,3 +255,81 @@ runs:
         ACTION_DUMP_CONTEXT_MATRIX: ${{ toJson(matrix) }}
         ACTION_DUMP_CONTEXT_NEEDS: ${{ inputs.needs-context }}
         ACTION_DUMP_CONTEXT_INPUTS: ${{ inputs.inputs-context }}
+
+    - uses: actions/github-script@v6
+      if: ${{ inputs.smee == 'true' }}
+      id: smee
+      with:
+        script: |
+          // helpers
+          function niceHeader(label, color, emoji, group = false) {
+            const colors = {
+              red: '\x1b[31m',
+              green: '\x1b[32m',
+              yellow: '\x1b[33m',
+              blue: '\x1b[34m'
+            }
+            const emojis = {
+              arrowDown: '⬇️',
+              stop: '🛑',
+              warning: '⚠️',
+              error: '❌',
+              check: '✅'
+            }
+            const reset = '\x1b[0m'
+
+            let expand = ''
+            if (group) {
+              expand = ' expand for details...'
+            }
+
+            return `${colors[color]}${emojis[emoji]} ${label}${reset}${expand}`
+          }
+
+          const { INPUT_SMEE_CHANNEL, GITHUB_EVENT_NAME, GITHUB_RUN_ID } = process.env
+
+          let channel = `${context.repo.owner}-${context.repo.repo}`
+          if (INPUT_SMEE_CHANNEL !== '' && INPUT_SMEE_CHANNEL !== 'null') {
+            channel = INPUT_SMEE_CHANNEL
+          }
+
+          // https://docs.github.com/webhooks-and-events/webhooks/webhook-events-and-payloads#delivery-headers
+          const headers = {
+            'X-GitHub-Event': GITHUB_EVENT_NAME,
+            'X-GitHub-Delivery': GITHUB_RUN_ID
+          }
+
+          const payload = {
+            ...context.payload,
+            'dump-contexts': {
+              eventName: context.eventName,
+              sha: context.sha,
+              ref: context.ref,
+              workflow: context.workflow,
+              action: context.action,
+              actor: context.actor,
+              job: context.job,
+              runNumber: context.runNumber,
+              runId: context.runId,
+              apiUrl: context.apiUrl,
+              serverUrl: context.serverUrl,
+              graphqlUrl: context.graphqlUrl
+            }
+          }
+
+          const url = `https://smee.io/${channel}`
+          await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+              ...headers,
+              'Content-Type': 'application/json'
+            }
+          })
+
+          core.info(niceHeader(`Your SMEE URL is: ${url}`, 'green', 'check'))
+          core.info(niceHeader('SMEE only works when your browser tab is active.', 'yellow', 'warning'))
+          core.setOutput('smee', 'true')
+          core.setOutput('url', url)
+      env:
+        INPUT_SMEE_CHANNEL: ${{ inputs.smee-channel }}
