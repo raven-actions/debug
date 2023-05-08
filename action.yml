@@ -1,6 +1,6 @@
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
 ---
-name: Debug
+name: Debug GitHub Action
 description: Dump GitHub contexts and Runner environment, post action webhook payload to the SMEE.io
 author: Dariusz Porowski
 branding:

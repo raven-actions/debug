@@ -1,6 +1,6 @@
 # 🩺 Debug Action
 
-[![GitHub - marketplace](https://img.shields.io/badge/marketplace-debug-blue?logo=github&style=flat-square)](https://github.com/marketplace/actions/debug)
+[![GitHub - marketplace](https://img.shields.io/badge/marketplace-debug--github--action-blue?logo=github&style=flat-square)](https://github.com/marketplace/actions/debug-github-action)
 [![GitHub - release](https://img.shields.io/github/v/release/raven-actions/debug?style=flat-square)](https://github.com/raven-actions/debug/releases/latest)
 [![GitHub - ci](https://img.shields.io/github/actions/workflow/status/raven-actions/debug/ci.yml?logo=github&label=CI&style=flat-square&branch=main&event=push)](https://github.com/raven-actions/debug/actions/workflows/ci.yml?query=branch%3Amain+event%3Apush)
 [![GitHub - license](https://img.shields.io/github/license/raven-actions/debug?style=flat-square)](https://github.com/raven-actions/debug/blob/main/LICENSE)
