@@ -44,7 +44,7 @@ outputs:
 runs:
   using: composite
   steps:
-    - uses: actions/github-script@v6
+    - uses: actions/github-script@v7
       if: ${{ always() }}
       with:
         script: |
@@ -256,7 +256,7 @@ runs:
         ACTION_DUMP_CONTEXT_NEEDS: ${{ inputs.needs-context }}
         ACTION_DUMP_CONTEXT_INPUTS: ${{ inputs.inputs-context }}
 
-    - uses: actions/github-script@v6
+    - uses: actions/github-script@v7
       if: ${{ inputs.smee == 'true' }}
       id: smee
       with:
