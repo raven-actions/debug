@@ -27,7 +27,7 @@ jobs:
           fallback: ${{ github.token }}
 
       - name: Run Release Drafter
-        uses: release-drafter/release-drafter@v5
+        uses: release-drafter/release-drafter@v6
         id: release-drafter
         with:
           prerelease: true
