@@ -32,7 +32,7 @@ jobs:
 
       - name: Update release to the latest
         id: gh-release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           prerelease: false
           token: ${{ steps.get-token.outputs.BOT_TOKEN }}
