@@ -1,5 +1,6 @@
-# Please see the documentation for all configuration options:
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+# yaml-language-server: $schema=https://json.schemastore.org/dependabot-2.0.json
+# See GitHub's documentation for more information on this file:
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 ---
 version: 2
 updates:
@@ -8,4 +9,5 @@ updates:
     schedule:
       interval: daily
     commit-message:
-      prefix: "[github-actions] ⬆️ "
+      prefix: ci
+      include: scope
