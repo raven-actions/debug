@@ -59,7 +59,7 @@ jobs:
 
       - name: actionlint
         if: ${{ steps.changes.outputs.gh-workflows == 'true' }}
-        uses: raven-actions/actionlint@v1
+        uses: raven-actions/actionlint@v2
         with:
           flags: "-ignore SC2086"
 
