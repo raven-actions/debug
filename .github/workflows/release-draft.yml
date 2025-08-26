@@ -18,21 +18,20 @@ jobs:
       pull-requests: read
     runs-on: ubuntu-latest
     steps:
-      - name: Get GitHub App Token
-        uses: wow-actions/use-app-token@v2
+      - name: Get Token
+        uses: actions/create-github-app-token@a8d616148505b5069dccd32f177bb87d7f39123b # v2.1.1
         id: get-token
         with:
-          app_id: ${{ secrets.ORG_BOT_APP_ID }}
-          private_key: ${{ secrets.ORG_BOT_PRIVATE_KEY }}
-          fallback: ${{ github.token }}
+          app-id: ${{ secrets.ORG_BOT_APP_ID }}
+          private-key: ${{ secrets.ORG_BOT_PRIVATE_KEY }}
 
       - name: Run Release Drafter
-        uses: release-drafter/release-drafter@v6
+        uses: release-drafter/release-drafter@b1476f6e6eb133afa41ed8589daba6dc69b4d3f5 # v6.1.0
         id: release-drafter
         with:
           prerelease: true
         env:
-          GITHUB_TOKEN: ${{ steps.get-token.outputs.BOT_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.get-token.outputs.token }}
 
       - name: Get Release URL
         run: |
