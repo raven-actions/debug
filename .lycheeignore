@@ -7,3 +7,4 @@ https://github.com/marketplace/actions/publish-and-tag
 https://github.com/raven-actions/test/releases/v1.2.3
 
 https://aquasecurity.github.io/trivy-repo/deb
+https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
