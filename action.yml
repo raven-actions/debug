@@ -82,7 +82,7 @@ runs:
 
           // script context
           await core.group(groupHeader('Script (context)'), async () => {
-            core.info(jsonLogOutput(context))
+            core.info(jsonLogOutput(context, false))
           })
 
           // github context
