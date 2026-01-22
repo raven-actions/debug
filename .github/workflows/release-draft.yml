@@ -26,7 +26,7 @@ jobs:
           private-key: ${{ secrets.ORG_BOT_PRIVATE_KEY }}
 
       - name: Run Release Drafter
-        uses: release-drafter/release-drafter@267d2e0268deae5d44f3ba5029dd4d6e85f9d52d # v6.1.1
+        uses: release-drafter/release-drafter@6db134d15f3909ccc9eefd369f02bd1e9cffdf97 # v6.2.0
         id: release-drafter
         with:
           prerelease: true
