@@ -48,7 +48,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Detect changes
-        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+        uses: dorny/paths-filter@9d7afb8d214ad99e78fbd4247752c4caed2b6e4c # v4.0.0
         id: changes
         with:
           filters: |
@@ -65,7 +65,7 @@ jobs:
 
       - name: Markdown Links
         if: ${{ steps.changes.outputs.md == 'true' }}
-        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        uses: tcort/github-action-markdown-link-check@e7c7a18363c842693fadde5d41a3bd3573a7a225 # v1.1.2
         with:
           config-file: .github/linters/.markdown-link-check.json
 

@@ -19,14 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get Token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
         id: get-token
         with:
           app-id: ${{ secrets.ORG_BOT_APP_ID }}
           private-key: ${{ secrets.ORG_BOT_PRIVATE_KEY }}
 
       - name: Run Release Drafter
-        uses: release-drafter/release-drafter@6db134d15f3909ccc9eefd369f02bd1e9cffdf97 # v6.2.0
+        uses: release-drafter/release-drafter@3a7fb5c85b80b1dda66e1ccb94009adbbd32fce3 # v7.0.0
         id: release-drafter
         with:
           prerelease: true

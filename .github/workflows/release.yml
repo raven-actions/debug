@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get Token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
         id: get-token
         with:
           app-id: ${{ secrets.ORG_BOT_APP_ID }}
@@ -30,7 +30,7 @@ jobs:
 
       - name: Update release to the latest
         id: gh-release
-        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
+        uses: softprops/action-gh-release@26e8ad27a09a225049a7075d7ec1caa2df6ff332 # v2.6.0
         with:
           prerelease: false
           token: ${{ steps.get-token.outputs.token }}
